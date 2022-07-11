@@ -1,8 +1,8 @@
 import axios from "axios";
 import { Component, createEffect, createSignal, For, onMount } from "solid-js";
 
-import { Repo } from "../libs/types/Repo";
-import Card from "../libs/ui/Card";
+import { Repo } from "../../libs/types/Repo";
+import Card from "../../libs/ui/Card";
 
 const Home: Component = () => {
   const [username, setUsername] = createSignal("rldnrl");
