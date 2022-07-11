@@ -3,12 +3,12 @@ import type { Component } from "solid-js";
 
 const Nav: Component = () => {
   return (
-    <nav>
+    <nav class="my-4">
       <NavLink
         href="/"
         class="px-4 py-2 rounded mr-1 bg-blue-500 text-white hover:bg-blue-800"
         end
-        activeClass="bg-emerald-500"
+        activeClass="bg-emerald-500 hover:bg-emerald-800"
       >
         Home
       </NavLink>
