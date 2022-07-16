@@ -56,7 +56,6 @@ const Home: Component = () => {
             to={repo.html_url}
             onSave={() => {
               setSavedRepos([...savedRepos, repo]);
-              debugger
             }}
           />
         )}
