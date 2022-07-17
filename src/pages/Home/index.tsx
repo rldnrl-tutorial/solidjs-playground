@@ -57,6 +57,12 @@ const Home: Component = () => {
             onSave={() => {
               setSavedRepos([...savedRepos, repo]);
             }}
+            onUnsave={() => {
+              const nextState = savedRepos.filter(
+                (item) => item.id !== repo.id
+              );
+              setSavedRepos(nextState);
+            }}
           />
         )}
       </For>
