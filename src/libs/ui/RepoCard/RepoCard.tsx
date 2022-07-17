@@ -5,9 +5,10 @@ import Card from "../Card";
 type RepoCard = {
   repo: Repo;
   onSave?: () => void;
+  onUnsave?: () => void;
 };
 
-const RepoCard: Component<RepoCard> = ({ repo, onSave }) => {
+const RepoCard: Component<RepoCard> = ({ repo, onSave, onUnsave }) => {
   return (
     <Card
       title={repo.name}
@@ -15,6 +16,7 @@ const RepoCard: Component<RepoCard> = ({ repo, onSave }) => {
       starCount={repo.stargazers_count}
       to={repo.html_url}
       onSave={onSave}
+      onUnsave={onUnsave}
     />
   );
 };
