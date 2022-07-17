@@ -1,12 +1,16 @@
 import axios from "axios";
 import { Component, createEffect, createSignal, For, onMount } from "solid-js";
-import { useRepoContext } from "../../libs/providers/RepoProvider";
+import {
+  repos,
+  savedRepos,
+  setRepos,
+  setSavedRepos,
+} from "../../libs/store/repo";
 
-import Card from "../../libs/ui/Card";
+import RepoCard from "../../libs/ui/RepoCard";
 
 const Home: Component = () => {
   const [username, setUsername] = createSignal("rldnrl");
-  const { repos, setRepos, savedRepos, setSavedRepos } = useRepoContext();
 
   onMount(async () => {
     const res = await axios.get(
@@ -47,25 +51,7 @@ const Home: Component = () => {
         </button>
       </form>
       <h3>Githbu repos for {username()}</h3>
-      <For each={repos}>
-        {(repo) => (
-          <Card
-            title={repo.name}
-            description={repo.description}
-            starCount={repo.stargazers_count}
-            to={repo.html_url}
-            onSave={() => {
-              setSavedRepos([...savedRepos, repo]);
-            }}
-            onUnsave={() => {
-              const nextState = savedRepos.filter(
-                (item) => item.id !== repo.id
-              );
-              setSavedRepos(nextState);
-            }}
-          />
-        )}
-      </For>
+      <For each={repos()}>{(repo) => <RepoCard repo={repo} />}</For>
     </div>
   );
 };
