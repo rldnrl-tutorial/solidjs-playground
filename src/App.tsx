@@ -1,9 +1,10 @@
-import type { Component } from "solid-js";
+import { Component, lazy } from "solid-js";
 import { Route, Routes } from "solid-app-router";
 
 import Nav from "./libs/ui/Nav";
-import Home from "./pages/Home";
-import SavedRepos from "./pages/SavedRepos";
+
+const Home = lazy(() => import("./pages/Home"));
+const SavedRepos = lazy(() => import("./pages/SavedRepos"));
 
 const App: Component = () => {
   return (
