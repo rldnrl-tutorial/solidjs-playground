@@ -1,34 +1,79 @@
-## Usage
+# Solid.js
 
-Those templates dependencies are maintained via [pnpm](https://pnpm.io) via `pnpm up -Lri`.
+## Motivation
+- React.js 외에 다른 프레임워크를 해보고 싶어서
 
-This is the reason you see a `pnpm-lock.yaml`. That being said, any package manager will work. This file can be safely be removed once you clone a template.
+## 느낀 점
+### 컴포넌트 내부에 state를 넣지 않아도 된다.
 
-```bash
-$ npm install # or pnpm install or yarn install
+```tsx
+const Counter = () => {
+  const [count, setCount] = createSignal(0)
+
+  return <div>{count()}</div>
+}
 ```
 
-### Learn more on the [Solid Website](https://solidjs.com) and come chat with us on our [Discord](https://discord.com/invite/solidjs)
+```tsx
+const [count, setCount] = createSignal(0)
 
-## Available Scripts
+const Counter = () => {
+  return <div>{count()}</div>
+}
+```
 
-In the project directory, you can run:
+React.js는 내부에 state를 선언하고 하위 컴포넌트로 내려줘야하는데, Solid.js는 그럴 필요가 없다. 상태를 외부에서 선언해버리고, 다이렉트로 사용하면된다.(이는 Context와는 또 다르다.)
 
-### `npm dev` or `npm start`
+하지만 폴더 구조에 대해서 깊게 생각하지 않는다면, 파악하기 어려울 것 같다.
 
-Runs the app in the development mode.<br>
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+### 여러 가지 유용한 컴포넌트: `<For>`, `<Show>`
 
-The page will reload if you make edits.<br>
+React.js의 경우에는 `array`의 `map`을 사용하는 방식으로 렌더링을 진행했다. Solid.js에서는 `For` 컴포넌트를 제공한다.
 
-### `npm run build`
+```tsx
+<For each={repos}>
+  {repo => <RepoCard repo={repo} />}
+</For>
+```
 
-Builds the app for production to the `dist` folder.<br>
-It correctly bundles Solid in production mode and optimizes the build for the best performance.
+React.js의 경우 조건부 렌더링을 하려면 `&&`, **삼항 연산자**를 사용해야한다. Solid.js에서는 `Show` 컴포넌트를 제공한다. 
 
-The build is minified and the filenames include the hashes.<br>
-Your app is ready to be deployed!
+```tsx
+const [loggedIn, setLoggedIn] = createSignal(false);
+const toggle = () => setLoggedIn(!loggedIn())
 
-## Deployment
+<Show
+  when={loggedIn()}
+  fallback={<button onClick={toggle}>Log in</button>}
+>
+  <button onClick={toggle}>Log out</button>
+</Show>
+```
 
-You can deploy the `dist` folder to any static host provider (netlify, surge, now, etc.)
+### Mount 시점에서 실행하기
+
+React.js의 경우는 `useEffect`에 빈 배열을 넣어주면, 렌더링 시점 이후에 한 번 실행하게 된다. Solid.js의 경우 `onMount` 함수를 제공한다.
+
+```tsx
+onMount(async () => {
+  const res = await axios.get(
+    `https://api.github.com/users/${username()}/repos?sort=created`
+  );
+  setRepos(res.data);
+});
+```
+
+### 어떤 값이 바뀌면 함수 실행하기
+
+`createEffect`를 제공한다. `createEffect`는 추적 범위에서 지정된 함수를 실행하는 새 계산을 생성하여 종속성을 자동으로 추적하고 종속성이 업데이트될 때마다 함수를 자동으로 다시 실행한다. 
+
+```tsx
+createEffect(async () => {
+  const res = await axios.get(
+    `https://api.github.com/users/${username()}/repos?sort=created`
+  );
+  setRepos(res.data);
+});
+```
+
+위와 같은 코드가 있다면, `usename`이 바뀔 때마다 `createEffect` 함수가 실행된다.
